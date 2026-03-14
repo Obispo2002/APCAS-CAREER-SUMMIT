@@ -1,17 +1,14 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import crypto from "crypto";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const privateKey = fs.readFileSync(path.join(__dirname, "private-key.pem"), "utf8");
+import dotenv from "dotenv";
+dotenv.config();
+
+const privateKey = process.env.QZ_PRIVATE_KEY!;
+if (!privateKey) throw new Error("QZ_PRIVATE_KEY environment variable is not set");
 
 export async function GET({ url }) {
   const request = url.searchParams.get("request");
-
-  if (!request) {
-    return new Response("Missing request", { status: 400 });
-  }
+  if (!request) return new Response("Missing request", { status: 400 });
 
   const signer = crypto.createSign("RSA-SHA512");
   signer.update(request);
