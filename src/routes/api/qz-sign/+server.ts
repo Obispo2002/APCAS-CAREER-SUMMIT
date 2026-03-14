@@ -1,13 +1,12 @@
 import fs from "fs";
-import crypto from "crypto";
 import path from "path";
+import { fileURLToPath } from "url";
+import crypto from "crypto";
 
-const privateKey = fs.readFileSync(
-  path.resolve("src/lib/qz/private-key.pem"),
-  "utf8"
-);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const privateKey = fs.readFileSync(path.join(__dirname, "private-key.pem"), "utf8");
+
 export async function GET({ url }) {
-
   const request = url.searchParams.get("request");
 
   if (!request) {
